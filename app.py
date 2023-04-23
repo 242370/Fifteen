@@ -144,6 +144,7 @@ def find_and_set_empty_field(test_board):
 
 # obróbka otrzymanych danych
 def prepare_solution(data, solution_file, statistic_file, start_time):  # TODO: data powinna zawierać jeszcze endtime algorytmu
+    end_time = time.time() - start_time
     way, processed_nodes, visited_nodes, depth_level = data
     if way != -1:  # znalazł rozwiązanie
         # TODO: if(refactor constructor) delete below
@@ -157,7 +158,7 @@ def prepare_solution(data, solution_file, statistic_file, start_time):  # TODO: 
     file.write(str(solution_length))
     if way != -1:
         file.write('\n')
-        file.write(str(solution))
+        file.write(''.join(solution))
     file.close()
     file = open(statistic_file, 'w+')
     file.write(str(solution_length))
@@ -168,7 +169,7 @@ def prepare_solution(data, solution_file, statistic_file, start_time):  # TODO: 
     file.write('\n')
     file.write(str(depth_level))
     file.write('\n')
-    file.write(str(round((time.time() - start_time) * 1000, 3)))
+    file.write(str(round(end_time * 1000, 3)))
     file.close()
 
 

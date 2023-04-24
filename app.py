@@ -188,7 +188,7 @@ def dfs(start_time):
             if max_depth_reached:
                 depth_level = DEPTH
             else:
-                depth_level = len(current_node.way) - 1  # TODO: czemu - 1
+                depth_level = len(current_node.way) - 1
             return current_node.way, amount_of_processed_nodes, amount_of_visited_nodes, depth_level
         elif len(current_node.way) == DEPTH:
             current_node = current_node.parent
@@ -209,7 +209,7 @@ def dfs(start_time):
                 amount_of_visited_nodes += 1
                 amount_of_processed_nodes += 1
             else:  # nie mamy już nic do odwiedzenia w danym węźle
-                if current_node.last is None or time.time() - start_time > DEPTH:  # TODO: czemu porównanie czasu z depth
+                if current_node.last is None or time.time() - start_time > DEPTH:
                     return -1, amount_of_processed_nodes, amount_of_visited_nodes, depth_level  # wróciliśmy do roota
                 else:  # wróciliśmy do rodzica, ale nie jest on rootem
                     current_node = current_node.parent

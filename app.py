@@ -21,7 +21,6 @@ class Node:
             self.parent = parent
         self.last = last_move  # poprzedni względem aktualnego stanu planszy ruch (L, R, D, U)
         self.way = way.copy()  # ścieżka do zwrócenia na koniec
-        # TODO: if parent != 'Root':
         self.way.append(last_move)  # przy każdym kroku dodajemy do trasy
         self.to_visit = ORDER.copy()  # Kolejka do odwiedzenia, domyślnie wszystkie możliwe, później będą wykluczane
 
@@ -35,7 +34,6 @@ class Node:
         y = EMPTY_FIELD['row']  # pierwszy z kluczy mapy EMPTY_FIELD - wartość, to y
         x = EMPTY_FIELD['column']  # drugi z kluczy mapy EMPTY_FIELD - wartość, to x
         if move == 'L':  # zakładamy, że taki ruch wgl jest możliwy
-            # TODO: wyciągnąć przed if-y i bez pętli
             tmp_array = []
             for row in self.board:
                 tmp_array.append(row.copy())
@@ -65,7 +63,6 @@ class Node:
             self.create_child(tmp_array, move)
 
 
-# TODO: czy wgl jest potrzeba tej funkcji
 def change_position_of_empty_field(last_move):
     if last_move == 'U':
         EMPTY_FIELD['row'] += 1
@@ -143,11 +140,10 @@ def find_and_set_empty_field(test_board):
 
 
 # obróbka otrzymanych danych
-def prepare_solution(data, solution_file, statistic_file, start_time):  # TODO: data powinna zawierać jeszcze endtime algorytmu
+def prepare_solution(data, solution_file, statistic_file, start_time):
     end_time = time.time() - start_time
     way, processed_nodes, visited_nodes, depth_level = data
     if way != -1:  # znalazł rozwiązanie
-        # TODO: if(refactor constructor) delete below
         way.remove(way[0])  # usunięcie pierwszego elementu, zapewne None-a
         solution_length = len(way)
         solution = way
@@ -233,25 +229,25 @@ def bfs(start_time):
     queue = []  # kolejka, ponieważ najpierw odwiedzamy wszystkich na danym poziomie głębokości
     counter = 0
     while True:
-        counter += 1  # TODO: po co counter
-        if time.time() - start_time > DEPTH:  # TODO: czemu porównanie czasu z depth
-            return -1, amount_of_processed_nodes, amount_of_visited_nodes, len(current_node.way) - 1  # TODO: przy refaktoringu
+        counter += 1
+        if time.time() - start_time > DEPTH:
+            return -1, amount_of_processed_nodes, amount_of_visited_nodes, len(current_node.way) - 1
         if is_solved(current_node.board, SOLVED_BOARD):
-            return current_node.way, amount_of_processed_nodes, amount_of_visited_nodes, len(current_node.way) - 1  # TODO: przy refaktoringu
+            return current_node.way, amount_of_processed_nodes, amount_of_visited_nodes, len(current_node.way) - 1
         else:
-            if not current_node.last is None:  # TODO: is not zamiast not is
-                remove_impossible_moves(current_node, False)  # TODO: może można usunąć False
+            if not current_node.last is None:
+                remove_impossible_moves(current_node, False)
             for move in current_node.to_visit:
                 amount_of_processed_nodes += 1  # wszystkie dzieci są dodawane do kolejki, więc są jako processed
                 current_node.make_move(move)
                 current_node = current_node.children[move]
                 queue.append(current_node)
                 last_move = current_node.way[-1]  # ostatni element listy
-                change_position_of_empty_field(last_move)  # TODO: jeśli wywalimy tę metodę, można to zrobić jak przy A*
+                change_position_of_empty_field(last_move)
                 current_node = current_node.parent
             try:
                 if current_node.last is not None:  # jeżeli current_node nie jest rootem
-                    queue.remove(current_node)  # TODO: del queue[0] zamiast remove
+                    queue.remove(current_node)
             except ValueError:
                 pass  # pass = nop
             current_node = queue[0]
@@ -311,7 +307,7 @@ def astr(heuristic, start_time):
                 for key in current_node.errors:  # sprawdzamy czy jest tylko jeden min
                     if current_node.errors[key] == min_value:
                         tmp.append(key)
-                nr = random.randint(0, len(tmp) - 1)  # TODO: posortuj i weź pierwszy
+                nr = random.randint(0, len(tmp) - 1)
                 next_move = tmp[nr]
                 current_node.make_move(next_move)
                 current_node = current_node.children[next_move]
@@ -321,7 +317,7 @@ def astr(heuristic, start_time):
                 except ValueError:
                     pass
         except MemoryError:
-            return -1, amount_of_processed_nodes, amount_of_visited_nodes, len(current_node.way) - 1  # TODO: przy refaktoringu
+            return -1, amount_of_processed_nodes, amount_of_visited_nodes, len(current_node.way) - 1
 
 
 if __name__ == '__main__':
